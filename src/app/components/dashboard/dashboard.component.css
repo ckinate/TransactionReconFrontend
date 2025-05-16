@@ -1,0 +1,16 @@
+
+.dashboard-container {
+  padding: 20px;
+}
+
+.cards-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 992px) {
+  .cards-row {
+    flex-direction: column;
+  }
+}

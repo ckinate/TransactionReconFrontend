@@ -1,0 +1,28 @@
+<div class="sidebar">
+    <div class="logo-container">
+        <img src="/chrisTech.jpg" alt="Chris Logo" class="logo">
+    </div>
+    <nav class="nav-menu">
+        <ul class="menu-list">
+            <li *ngFor="let item of menuItems" class="menu-item"
+                [ngClass]="{'active': !item.isCollapsed && item.subItems && item.subItems.length > 0}">
+                <a [routerLink]="item.subItems && item.subItems.length > 0 ? null : item.route"
+                    (click)="item.subItems && item.subItems.length > 0 ? toggleSubMenu(item) : null" class="menu-link">
+                    <i class="fa {{item.icon}} menu-icon"></i>
+                    <span>{{item.name}}</span>
+                    <i *ngIf="item.subItems && item.subItems.length > 0" class="fa fa-chevron-down submenu-icon"
+                        [ngClass]="{'rotated': !item.isCollapsed}"></i>
+                </a>
+                <ul *ngIf="item.subItems && item.subItems.length > 0" class="submenu"
+                    [ngClass]="{'show': !item.isCollapsed}">
+                    <li *ngFor="let subItem of item.subItems" class="submenu-item">
+                        <a [routerLink]="subItem.route" class="submenu-link">
+                            <i class="fa {{subItem.icon}} submenu-icon"></i>
+                            <span>{{subItem.name}}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</div>
