@@ -10,7 +10,7 @@
                     (click)="item.subItems && item.subItems.length > 0 ? toggleSubMenu(item) : null" class="menu-link">
                     <i class="fa {{item.icon}} menu-icon"></i>
                     <span>{{item.name}}</span>
-                    <i *ngIf="item.subItems && item.subItems.length > 0" class="fa fa-chevron-down submenu-icon"
+                    <i *ngIf="item.subItems && item.subItems.length > 0" class="fa fa-chevron-right submenu-icon"
                         [ngClass]="{'rotated': !item.isCollapsed}"></i>
                 </a>
                 <ul *ngIf="item.subItems && item.subItems.length > 0" class="submenu"

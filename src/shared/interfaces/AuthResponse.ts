@@ -6,6 +6,8 @@ export interface AuthResponse {
   expireAt: Date;
   userId: string;
   email: string;
+  firstName: string;
+  lastName: string;
   roles: string[];
   permissions: string[];
 }

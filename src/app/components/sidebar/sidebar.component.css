@@ -59,7 +59,7 @@
 }
 
 .submenu-icon.rotated {
-  transform: rotate(180deg);
+  transform: rotate(90deg);
 }
 
 .submenu {

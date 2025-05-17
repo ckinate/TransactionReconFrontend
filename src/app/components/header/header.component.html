@@ -5,6 +5,8 @@
         <span class="current-item">Dashboard</span>
     </div>
     <div class="welcome-section">
-        <span>Welcome {{username}}, Log Out</span>
+        <span>Welcome {{currentUser?.firstName}} {{currentUser?.lastName}}, <a style="cursor: pointer;"
+                (click)=" logOut()">Log
+                Out</a> </span>
     </div>
 </header>

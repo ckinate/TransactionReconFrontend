@@ -14,7 +14,7 @@ import { RefreshTokenRequest } from '../../../interfaces/RefreshTokenRequest';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = `${environment.apiUrl}/auth`;
+  private apiUrl = `${environment.apiUrl}/api/Auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   private tokenExpirationTimer: any;
   private jwtHelper = new JwtHelperService();
@@ -90,7 +90,7 @@ export class AuthService {
         catchError(this.handleError)
       );
   }
-  
+
     hasPermission(permission: string): boolean {
     const user = this.currentUserSubject.value;
     return user?.permissions?.includes(permission) || false;
@@ -116,8 +116,8 @@ export class AuthService {
     const user: User = {
       id: response.userId,
       email: response.email,
-      firstName: '', // These would come from the API
-      lastName: '',  // or from the decoded token
+      firstName: response.firstName, // These would come from the API
+      lastName: response.lastName,  // or from the decoded token
       roles: response.roles,
       permissions: response.permissions
     };

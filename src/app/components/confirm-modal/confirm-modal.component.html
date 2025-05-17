@@ -1,0 +1,21 @@
+<div *ngIf="isVisible" class="modal fade show d-block" style="background-color: rgba(0,0,0,0.5);" tabindex="-1"
+    role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title fs-5">{{ config?.title }}</h2>
+            </div>
+            <div class="modal-body">
+                <p>{{ config?.message }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="onCancel()">
+                    {{ config?.cancelText || 'Cancel' }}
+                </button>
+                <button type="button" class="btn btn-primary" (click)="onConfirm()">
+                    {{ config?.confirmText || 'Confirm' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

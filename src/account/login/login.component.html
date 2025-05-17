@@ -1,0 +1,92 @@
+<section class="h-100 gradient-form" style="background-color: #eee;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-xl-10">
+                <div class="card rounded-3 text-black">
+                    <div class="row g-0">
+                        <div class="col-lg-6">
+                            <div class="card-body p-md-5 mx-md-4">
+                                <div class="text-center">
+                                    <img src="/lotus.webp" style="width: 185px;" alt="logo">
+                                    <h4 class="mt-1 mb-5 pb-1">Reconciliation System</h4>
+                                </div>
+                                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                                    <p>Please login to your account</p>
+                                    <div class="alert alert-danger" *ngIf="errorMessage"> {{ errorMessage }}</div>
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" id="email" formControlName="email" class="form-control"
+                                            [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+                                            placeholder="Enter email address" />
+
+                                        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                                            <div *ngIf="f['email'].errors['required']">Email is required</div>
+                                            <div *ngIf="f['email'].errors['email']">Email must be valid</div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="form-group mt-3">
+                                        <label for="password">Password</label>
+                                        <input type="password" id="password" formControlName="password"
+                                            class="form-control"
+                                            [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+                                            placeholder="Enter password" />
+
+                                        <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+                                            <div *ngIf="f['password'].errors['required']">Password is required</div>
+                                        </div>
+
+                                    </div>
+
+
+
+
+
+                                    <div class="d-flex justify-content-around align-items-center mb-4">
+                                        <!-- Checkbox -->
+                                        <div class="form-check mt-3">
+                                            <input type="checkbox" id="rememberMe" formControlName="rememberMe"
+                                                class="form-check-input" />
+                                            <label class="form-check-label" for="rememberMe">Remember me</label>
+
+                                        </div>
+                                        <a class="text-muted" href="#!">Forgot password?</a>
+                                    </div>
+
+                                    <div class="text-center pt-1 mb-5 pb-1">
+                                        <button [disabled]="loading"
+                                            class="btn btn-primary btn-block  gradient-custom-2 mb-3" type="submit">
+                                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                                            Login</button>
+
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-center pb-4">
+                                        <p class="mb-0 me-2">Don't have an account?</p>
+
+                                        <a routerLink="/register" class="btn btn-outline-danger">Register</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+                            <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                                <h2 class="mb-4">Chris Tech</h2>
+                                <p class="small mb-0">We are more than just a company. We develop custom software
+                                    application to drive business growth. We specialize in web, mobile application
+                                    and Machine learning/Artificial Intelligent.
+                                </p>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</section>
