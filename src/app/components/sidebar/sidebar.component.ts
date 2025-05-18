@@ -20,14 +20,7 @@ export class SidebarComponent implements OnInit {
       isCollapsed: true,
       subItems: []
     },
-    {
-      name: 'Customer Trend Analysis',
-      icon: 'fa-chart-line',
-      route: '/customer-trend-analysis',
-      isCollapsed: true,
-      permission: 'Pages.CustomerTrendAnalysis',
-      subItems: []
-    },
+   
     {
       name: 'Setup',
       icon: 'fa-cog',
@@ -37,14 +30,14 @@ export class SidebarComponent implements OnInit {
       subItems: []
     },
     {
-      name: 'Customer',
+      name: 'Administration',
       icon: 'fa-users',
-      route: '/customer',
+      route: '/users',
       isCollapsed: true,
-      permission: '',
+      permission: 'Users.View',
       subItems: [
-        { name: 'Customers', icon: 'fa-user', route: '/customers', isCollapsed: true, permission: 'Pages.Customer.Management'},
-        { name: 'Invoice', icon: 'fa-file-invoice', route: '/invoice', isCollapsed: true },
+        { name: 'Users', icon: 'fa-user', route: '/users', isCollapsed: true, permission: 'Users.View'},
+        { name: 'Roles', icon: 'fa-file-invoice', route: '/roles', isCollapsed: true,permission: 'Roles.View' },
         { name: 'Payments', icon: 'fa-money-bill', route: '/payments', isCollapsed: true },
         { name: 'Verify Online Payments', icon: 'fa-check-circle', route: '/verify-online-payments', isCollapsed: true },
         { name: 'Customer Edit Request', icon: 'fa-edit', route: '/customer-edit-request', isCollapsed: true },

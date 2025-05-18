@@ -3,12 +3,13 @@ import { environment } from '../../../../environments/environment';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { User } from '../../../interfaces/User';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LoginRequest } from '../../../interfaces/LoginRequest';
 import { AuthResponse } from '../../../interfaces/AuthResponse';
 import { RegisterRequest } from '../../../interfaces/RegisterRequest';
 import { RefreshTokenRequest } from '../../../interfaces/RefreshTokenRequest';
+import { ErrorHandlerService } from '../error/error-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ export class AuthService {
   private jwtHelper = new JwtHelperService();
     public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private errorHandler: ErrorHandlerService) {
      this.checkForStoredAuth();
   }
   
@@ -35,14 +36,16 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, loginData)
       .pipe(
         tap(response => this.handleAuthentication(response, loginData.rememberMe)),
-        catchError(this.handleError)
+       // catchError(this.handleError),
+        catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
       );
   }
   register(registerData: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, registerData)
       .pipe(
         tap(response => this.handleAuthentication(response, true)),
-        catchError(this.handleError)
+        catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+       // catchError(this.handleError)
       );
   }
     logout() {
@@ -87,7 +90,8 @@ export class AuthService {
           const isRememberMe = !!localStorage.getItem('token');
           this.handleAuthentication(response, isRememberMe);
         }),
-        catchError(this.handleError)
+        catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+       // catchError(this.handleError)
       );
   }
 
