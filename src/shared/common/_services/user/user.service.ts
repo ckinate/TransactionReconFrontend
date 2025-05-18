@@ -5,6 +5,7 @@ import { ErrorHandlerService } from '../error/error-handler.service';
 import { catchError, Observable } from 'rxjs';
 import { GetPaginatedUser } from '../../../interfaces/GetPaginatedUser';
 import { GetPaginatedUserInput } from '../../../interfaces/GetPaginatedUserInput';
+import { GetUserDto } from '../../../interfaces/GetUserDto';
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,11 @@ export class UserService {
       catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
     );
     
+  }
+  getUser(id: string): Observable<GetUserDto>{
+    const url = `${this.apiUrl}/${id}`;
+    return this.http.get<GetUserDto>(url).pipe(
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
   }
 }
