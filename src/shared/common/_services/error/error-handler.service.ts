@@ -18,16 +18,46 @@ export class ErrorHandlerService {
     else {
       switch (error.status) {
         case 400:
-          errorMessage = 'Bad request. Please check your input.';
+          if (error?.message) {
+            errorMessage = `Error: ${error?.message}`;
+          }
+          else if (error?.error && error?.error?.errors) {
+            errorMessage = Object.values(error?.error?.errors).flat().join('');
+          }
+         
+          else if (Array.isArray(error?.error)) {
+            errorMessage = error?.error?.map((err: any) => err?.description).join(' ');
+          }
+          else {
+             errorMessage = 'Bad request. Please check your input.';
+          }
           break;
         case 401:
-          errorMessage = 'Unauthorized. Please log in again.';
+          if (error?.message) {
+             errorMessage = `Error: ${error?.message}`;
+          }
+          else {
+            errorMessage = 'Unauthorized. Please log in again.';
+          }
+          
           break;
         case 404:
-          errorMessage = 'Resource not found.';
+           if (error?.message) {
+             errorMessage = `Error: ${error?.message}`;
+          }
+           else {
+              errorMessage = 'Resource not found.';
+          }
+         
           break;
         case 500:
-          errorMessage = 'Server error. Please try again later.';
+         if (error?.message) {
+             errorMessage = `Error: ${error?.message}`;
+          }
+         else {
+           errorMessage = 'Server error. Please try again later.';
+          }
+          
           break;
         default:
           errorMessage = `Server error: ${error.status} - ${error.message}`;
