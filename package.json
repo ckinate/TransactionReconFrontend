@@ -20,7 +20,9 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "bootstrap": "^5.3.6",
+    "luxon": "^3.6.1",
     "ngx-bootstrap": "^19.0.2",
+    "ngx-spinner": "^19.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

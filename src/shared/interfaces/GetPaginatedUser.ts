@@ -1,6 +1,6 @@
 
 export interface GetPaginatedUser {
-  items: Item[]
+  items: UserItem[]
   pageIndex: number
   pageSize: number
   totalPages: number
@@ -9,7 +9,7 @@ export interface GetPaginatedUser {
   hasNextPage: boolean
 }
 
-export interface Item {
+export interface UserItem {
   id: string
   userName: string
   firstName: string
