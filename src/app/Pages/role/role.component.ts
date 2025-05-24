@@ -9,16 +9,21 @@ import { PermissionPipe } from '../../../shared/common/_pipes/permission.pipe';
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
 import { BusyIfDirective } from '../../../shared/common/_directives/busy-if.directive';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { PermissionAnyPipe } from '../../../shared/common/_pipes/permission-any.pipe';
+import { RoleDto } from '../../../shared/interfaces/RoleDto';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 
 @Component({
   selector: 'app-role',
-  imports: [CommonModule,RouterModule, FormsModule, PermissionPipe, ModalModule,BusyIfDirective, BsDropdownModule],
+  imports: [CommonModule, RouterModule, FormsModule, PermissionPipe, PermissionAnyPipe, ModalModule, BusyIfDirective, BsDropdownModule,
+    TabsModule
+  ],
   templateUrl: './role.component.html',
   styleUrl: './role.component.css'
 })
 export class RoleComponent implements OnInit{
-   @ViewChild('modal', {static: true}) modal!: ModalDirective;
+   @ViewChild('createModal', {static: true}) createModal!: ModalDirective;
 
   constructor(private roleService: RoleService) { }
   paginatedRoleValues: GetPaginatedRole ={
@@ -33,9 +38,11 @@ export class RoleComponent implements OnInit{
   rolesList: RoleItem[] = [];
   isLoadingRoles: boolean = false;
   filterValue: string = "";
+  createRole: RoleDto = new RoleDto();
   
   ngOnInit(): void {
-    this. getRoles();
+    this.getRoles();
+  // this.createRole.description
   }
   getRoles() {
     this.isLoadingRoles = true;
@@ -68,7 +75,10 @@ export class RoleComponent implements OnInit{
    
   }
   openCreateModal() {
-    this.modal.show();
+    this.createModal.show();
+  }
+  closeCreateModal() {
+    this.createModal.hide();
   }
   refresh() {
        this.getRoles();
