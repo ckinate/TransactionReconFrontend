@@ -89,7 +89,7 @@ export class RoleComponent implements OnInit{
    
     this.roleId = roleId;
      console.log(`The role ID inside modal is ${this.roleId}`);
-     this.permissionComponent.loadPermissions();
+   //  this.permissionComponent.loadPermissions();
     this.editModal.show();
   }
   closeEditModal() {

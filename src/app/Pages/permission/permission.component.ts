@@ -1,4 +1,4 @@
-import { Component, Input, input, OnInit } from '@angular/core';
+import { Component, Input, input, OnInit, SimpleChanges } from '@angular/core';
 import { RoleService } from '../../../shared/common/_services/role/role.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -20,6 +20,11 @@ export class PermissionComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadPermissions();
+  }
+   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['roleId'] && changes['roleId'].currentValue) {
+      this.loadPermissions();
+    }
   }
 
    loadPermissions(): void {
