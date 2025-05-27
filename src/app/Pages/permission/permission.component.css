@@ -1,0 +1,146 @@
+.role-permissions-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  border: 1px solid #e0e0e0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 1rem;
+}
+
+.tabs {
+  display: flex;
+}
+
+.tab {
+  padding: 1rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  font-weight: 500;
+}
+
+.tab.active {
+  border-bottom: 2px solid #4CAF50;
+  color: #4CAF50;
+}
+
+.refresh-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-container {
+  padding: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.permissions-tree {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.tree-header {
+  display: flex;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: bold;
+}
+
+.column {
+  padding: 0.25rem;
+}
+
+.header-checkbox {
+  width: 40px;
+}
+
+.header-text {
+  flex: 1;
+}
+
+.tree-node {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.tree-node.collapsed .node-children {
+  display: none;
+}
+
+.node-content {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.node-expander {
+  width: 20px;
+  text-align: center;
+  cursor: pointer;
+  color: #666;
+  transition: transform 0.2s ease;
+}
+
+.node-expander:hover {
+  color: #333;
+}
+
+.node-checkbox {
+  width: 20px;
+  text-align: center;
+  margin-right: 0.5rem;
+}
+
+.node-label {
+  flex: 1;
+  font-weight: 500;
+}
+
+.tree-node.leaf .node-label {
+  font-weight: normal;
+}
+
+.node-children {
+  margin-left: 20px;
+}
+
+/* Indentation levels */
+.level-1 .node-content {
+  padding-left: 2rem;
+}
+
+.level-2 .node-content {
+  padding-left: 3rem;
+}
+
+.level-3 .node-content {
+  padding-left: 4rem;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  font-style: italic;
+  color: #666;
+}

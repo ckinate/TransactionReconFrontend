@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, input, OnInit } from '@angular/core';
 import { RoleService } from '../../../shared/common/_services/role/role.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -15,23 +15,25 @@ export class PermissionComponent implements OnInit{
   constructor(private roleService: RoleService) { }
   permissionTree: PermissionNode[] = [];
   searchControl = new FormControl('');
-   roleId: string = '';
+  @Input()roleId: string = '';
   loading = false;
 
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.loadPermissions();
   }
 
    loadPermissions(): void {
-    this.loading = true;
+     this.loading = true;
+      console.log(`The role ID inside loadPermission is ${this.roleId}`);
     
     // Get permission tree
     this.roleService.getPermissionsTree().subscribe(tree => {
-      this.permissionTree = tree;
+      this.permissionTree = this.initializeTreeState(tree);
       
       // If we have a role ID, get its permissions
       if (this.roleId) {
-        this.roleService. getRole(this.roleId).subscribe(role => {
+        console.log(`The role ID is ${this.roleId}`);
+        this.roleService.getRole(this.roleId).subscribe(role => {
           this.applyPermissionsToTree(this.permissionTree, role.permissions);
           this.loading = false;
         });
@@ -41,8 +43,23 @@ export class PermissionComponent implements OnInit{
     });
   }
 
+  // Initialize tree state with collapsed groups
+  initializeTreeState(nodes: PermissionNode[]): PermissionNode[] {
+    return nodes.map(node => ({
+      ...node,
+      expanded: false, // Start collapsed
+      children: node.children ? this.initializeTreeState(node.children) : node.children
+    }));
+  }
 
-   // Recursively apply selected permissions to tree
+  // Toggle expanded state of group nodes
+  toggleExpanded(node: PermissionNode): void {
+    if (node.isGroup) {
+      node.expanded = !node.expanded;
+    }
+  }
+
+  // Recursively apply selected permissions to tree
   applyPermissionsToTree(nodes: PermissionNode[], selectedPermissions: string[]): void {
     nodes.forEach(node => {
       if (node.isGroup && node.children) {
@@ -61,6 +78,7 @@ export class PermissionComponent implements OnInit{
       }
     });
   }
+
   // Update states of parent nodes
   updateParentStates(nodes: PermissionNode[]): void {
     nodes.forEach(node => {
@@ -73,6 +91,7 @@ export class PermissionComponent implements OnInit{
       }
     });
   }
+
   // Handle node check/uncheck
   toggleNode(node: PermissionNode, checked: boolean): void {
     node.checked = checked;
@@ -101,6 +120,7 @@ export class PermissionComponent implements OnInit{
       }
     });
     
+    
     return permissions;
   }
 
@@ -114,5 +134,34 @@ export class PermissionComponent implements OnInit{
   refreshPermissions(): void {
     this.loadPermissions();
   }
+
+  onCheckboxChange(event: Event, node: PermissionNode): void {
+    const input = event.target as HTMLInputElement;
+    this.toggleNode(node, input.checked);
+  }
+
+  selectedPermission():string[] {
+    const selectedPermissions = this.collectSelectedPermissions(this.permissionTree);
+    return selectedPermissions;
+  }
+
+
+   // Save permissions
+  savePermissions(): void {
+    const selectedPermissions = this.collectSelectedPermissions(this.permissionTree);
+    
+    // this.permissionService.saveRolePermissions({
+    //   roleId: this.roleId,
+    //   permissionKeys: selectedPermissions
+    // }).subscribe(() => {
+    //   // Handle success
+    //   alert('Permissions saved successfully');
+    // }, error => {
+      
+    //   console.error('Error saving permissions', error);
+    //   alert('Error saving permissions');
+    // });
+  }
+
 
 }

@@ -1,3 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "@ng-select/ng-select/themes/default.theme.css";
+
+
+ /* Slightly darker, more corporate */
+/* Slightly darker, more corporate */
+.btn-primary {
+    background-color: #0056b3;
+    border-color: #004a99;
+    color: #ffffff;
+}
+.btn-primary:hover {
+    background-color: #004a99;
+}
+
+

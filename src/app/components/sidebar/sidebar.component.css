@@ -16,7 +16,7 @@
 }
 
 .logo {
-  height: 40px;
+  height: 60px;
 }
 
 .nav-menu {
@@ -81,17 +81,25 @@
 }
 
 .submenu-link {
-  padding: 10px 20px 10px 50px;
+  padding: 10px 20px 10px 40px; /* Reduced left padding from 50px to 40px */
   display: flex;
   align-items: center;
   color: #a0b4c5;
   text-decoration: none;
   transition: all 0.3s;
+  text-align: left; /* Explicitly set text alignment to left */
+  justify-content: flex-start; /* Ensure flex items align to the start (left) */
 }
 
 .submenu-link:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
+}
+
+.submenu-link .fa {
+  margin-right: 8px; /* Add some space between icon and text */
+  width: 16px; /* Set consistent width for submenu icons */
+  text-align: center;
 }
 
 .menu-item.active > .menu-link {

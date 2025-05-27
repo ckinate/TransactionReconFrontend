@@ -11,11 +11,13 @@
                 <div class="col-md-4">
                     <div
                         style="flex-direction: row; display: flex; border-width: 1px;border-color: black;border-radius: 20px;border-style: solid;">
-                        <a (click)="getRoles()" style="cursor: pointer;"><i class="strip-button fa fa-search" style="margin-top: 10px;margin-left: 10px;"></i></a>
-                        
-                        <input id="description" name="description" style="border:none;width: 80%;outline: none;box-shadow: none;"
-                            pattern="[a-zA-Z0-9 ]*" (input)="onChange()" type="search" [(ngModel)]="filterValue"
-                            class="form-control rounded" placeholder="Search ">
+                        <a (click)="getRoles()" style="cursor: pointer;"><i class="strip-button fa fa-search"
+                                style="margin-top: 10px;margin-left: 10px;"></i></a>
+
+                        <input id="description" name="description"
+                            style="border:none;width: 80%;outline: none;box-shadow: none;" pattern="[a-zA-Z0-9 ]*"
+                            (input)="onChange()" type="search" [(ngModel)]="filterValue" class="form-control rounded"
+                            placeholder="Search ">
 
                     </div>
 
@@ -35,7 +37,7 @@
                     </span>
                 </div>
                 <div class="col-md-2">
-                    <button class="btn btn-primary" (click)=" refresh()">Refresh</button>
+                    <button class="btn btn-primary" (click)=" refresh()"> <i class="fas fa-sync"></i> Refresh</button>
 
                 </div>
             </div>
@@ -59,7 +61,8 @@
                                     </span>
                                     <ul class="dropdown-menu dropdown-menu-end" *dropdownMenu style="width: 50px;">
                                         <li *ngIf="'Roles.Create' | permission">
-                                            <a href="javascript:;" class="dropdown-item">
+                                            <a href="javascript:;" class="dropdown-item"
+                                                (click)="openEditModal(role.id)">
                                                 {{"Edit"}}
                                             </a>
                                         </li>
@@ -155,6 +158,7 @@
 
                         </tab>
                         <tab heading="{{'Permissions'}}">
+                            <app-permission #permissionComponent></app-permission>
 
                         </tab>
 
@@ -165,12 +169,81 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary blue">
+                    <button type="submit" class="btn btn-primary blue" (click)="Save()">
                         <em class="fa fa-save"></em>
                         <span>{{ "Save" }}</span>
                     </button>
 
                     <span class="btn btn-light-danger font-weight-bold" (click)="closeCreateModal()"
+                        [attr.aria-label]="'Close'" style="cursor: pointer;">
+                        {{ "Close" }}
+                    </span>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<div bsModal #editModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <h4 class="modal-title m-0">
+                    <span>{{ "Edit Role" }}</span>
+                </h4>
+                <span class="close" (click)="closeEditModal()" [attr.aria-label]="'Close'" style="cursor: pointer;">
+                    <i aria-hidden="true" class="fa fa-times"></i>
+                </span>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <tabset class="tab-container tabbable-line">
+                        <tab heading="{{'Role Name'}}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="roleName"> {{"Name"}} <span
+                                                style="color: red;">*</span></label>
+                                        <input type="text" required class="form-control" id="RoleName"
+                                            placeholder="Enter Role Name" name="RoleName" [(ngModel)]="createRole.name">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="roleDesc"> {{"Description"}} <span
+                                                style="color: red;">*</span></label>
+                                        <input type="text" required class="form-control" id="RoleDesc"
+                                            placeholder="Enter Role Desc" name="RoleDesc"
+                                            [(ngModel)]="createRole.description">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </tab>
+                        <tab heading="{{'Permissions'}}">
+                            <app-permission [roleId]="roleId" #permissionComponent></app-permission>
+
+                        </tab>
+
+                    </tabset>
+
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary blue" (click)="Save()">
+                        <em class="fa fa-save"></em>
+                        <span>{{ "Save" }}</span>
+                    </button>
+
+                    <span class="btn btn-light-danger font-weight-bold" (click)="closeEditModal()"
                         [attr.aria-label]="'Close'" style="cursor: pointer;">
                         {{ "Close" }}
                     </span>

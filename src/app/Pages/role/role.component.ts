@@ -12,18 +12,21 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { PermissionAnyPipe } from '../../../shared/common/_pipes/permission-any.pipe';
 import { RoleDto } from '../../../shared/interfaces/RoleDto';
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { PermissionComponent } from '../permission/permission.component';
 
 
 @Component({
   selector: 'app-role',
   imports: [CommonModule, RouterModule, FormsModule, PermissionPipe, PermissionAnyPipe, ModalModule, BusyIfDirective, BsDropdownModule,
-    TabsModule
+    TabsModule, PermissionComponent
   ],
   templateUrl: './role.component.html',
   styleUrl: './role.component.css'
 })
 export class RoleComponent implements OnInit{
-   @ViewChild('createModal', {static: true}) createModal!: ModalDirective;
+  @ViewChild('createModal', { static: true }) createModal!: ModalDirective;
+  @ViewChild('permissionComponent') permissionComponent!: PermissionComponent;
+   @ViewChild('editModal', { static: true }) editModal!: ModalDirective;
 
   constructor(private roleService: RoleService) { }
   paginatedRoleValues: GetPaginatedRole ={
@@ -39,6 +42,7 @@ export class RoleComponent implements OnInit{
   isLoadingRoles: boolean = false;
   filterValue: string = "";
   createRole: RoleDto = new RoleDto();
+  roleId: string = "";
   
   ngOnInit(): void {
     this.getRoles();
@@ -57,6 +61,7 @@ export class RoleComponent implements OnInit{
           this.rolesList = response.items;
           console.log(`The roles is ${JSON.stringify(response.items)}`)
           this.paginatedRoleValues = response;
+          response.items.map(x=>x.id)
           this.isLoadingRoles = false;
         },
         error: (err: any) => {
@@ -80,6 +85,16 @@ export class RoleComponent implements OnInit{
   closeCreateModal() {
     this.createModal.hide();
   }
+  openEditModal(roleId: string) {
+   
+    this.roleId = roleId;
+     console.log(`The role ID inside modal is ${this.roleId}`);
+     this.permissionComponent.loadPermissions();
+    this.editModal.show();
+  }
+  closeEditModal() {
+    this.editModal.hide();
+  }
   refresh() {
        this.getRoles();
   }
@@ -99,6 +114,11 @@ export class RoleComponent implements OnInit{
      this.paginatedRoleValues.pageIndex = 1;
       this.getRoles();
    
+  }
+
+  Save() {
+    const permissions = this.permissionComponent.selectedPermission();
+      console.log(`The selected Permission is ${JSON.stringify(permissions)}`)
   }
 
 

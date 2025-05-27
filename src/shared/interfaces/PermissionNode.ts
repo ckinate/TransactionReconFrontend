@@ -4,5 +4,6 @@ export interface PermissionNode {
   isGroup: boolean;
   children?: PermissionNode[];
   checked?: boolean;
+  expanded?: boolean;
   indeterminate?: boolean;
 }
