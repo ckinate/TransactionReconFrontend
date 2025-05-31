@@ -1,0 +1,74 @@
+
+<div bsModal #createModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <h4 class="modal-title m-0">
+                    <span>{{ isEditMode ? 'Edit Role' : 'Create Role' }}</span>
+                </h4>
+                <span class="close" (click)=" Close()" [attr.aria-label]="'Close'" style="cursor: pointer;">
+                    <i aria-hidden="true" class="fa fa-times"></i>
+                </span>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <tabset class="tab-container tabbable-line">
+                        <tab heading="{{'Role Name'}}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="roleName"> {{"Name"}} <span
+                                                style="color: red;">*</span></label>
+                                        <input type="text" required class="form-control" id="RoleName"
+                                            placeholder="Enter Role Name" name="RoleName" [(ngModel)]="createRole.name">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="small mb-1" for="roleDesc"> {{"Description"}} <span
+                                                style="color: red;">*</span></label>
+                                        <input type="text" required class="form-control" id="RoleDesc"
+                                            placeholder="Enter Role Desc" name="RoleDesc"
+                                            [(ngModel)]="createRole.description">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </tab>
+                        <tab heading="{{'Permissions'}}">
+                            <app-permission  [permissionNodes]="permissionNodes"
+                             [selectedPermissions]="selectedPermissions"
+                              (permissionsChange)="onPermissionsChange($event)" >
+
+                            </app-permission>
+
+                        </tab>
+
+                    </tabset>
+
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary blue" (click)="onSubmit()"
+                      >
+                        <em class="fa fa-save"></em>
+                        <span>{{ loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create') }}</span>
+                    </button>
+
+                    <span class="btn btn-light-danger font-weight-bold" (click)="Close()"
+                        [attr.aria-label]="'Close'" style="cursor: pointer;">
+                        {{ "Close" }}
+                    </span>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

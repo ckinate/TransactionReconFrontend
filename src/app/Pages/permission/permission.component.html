@@ -1,61 +1,54 @@
-<div class="role-permissions-container">
-    <div class="search-container">
-        <input type="text" [formControl]="searchControl" placeholder="Search..." (input)="searchPermissions()">
+<div class="permission-tree">
+  <div *ngFor="let node of permissionNodes" class="permission-node">
+    <div class="node-item" [class.group]="node.isGroup">
+      <div class="checkbox-container">
+        <!-- Toggle icon appears first for groups -->
+        <button
+          *ngIf="node.isGroup && node.children && node.children.length > 0"
+          type="button"
+          class="expand-button"
+          (click)="toggleExpand(node)"
+        >
+          <i class="fas" [class.fa-chevron-down]="node.expanded" [class.fa-chevron-right]="!node.expanded"></i>
+        </button>
+        
+        <!-- Spacer for non-group items to maintain alignment -->
+        <div *ngIf="!node.isGroup || !node.children || node.children.length === 0" class="expand-spacer"></div>
+        
+        <input
+          type="checkbox"
+          [id]="node.key"
+          [checked]="node.checked"
+          [indeterminate]="node.indeterminate"
+          (change)="onNodeChange(node, $event)"
+          class="permission-checkbox"
+        />
+        <label [for]="node.key" class="permission-label">
+          {{ node.name }}
+        </label>
+      </div>
     </div>
-
-    <div class="permissions-tree" *ngIf="!loading">
-        <div class="tree-header">
-            <div class="column header-checkbox">
-                <!-- Main checkbox -->
-            </div>
+    
+    <div 
+      *ngIf="node.children && node.children.length > 0 && node.expanded"
+      class="children-container"
+    >
+      <div *ngFor="let child of node.children" class="child-node">
+        <div class="checkbox-container">
+          <!-- Spacer for child items -->
+          <div class="expand-spacer"></div>
+          <input
+            type="checkbox"
+            [id]="child.key"
+            [checked]="child.checked"
+            (change)="onNodeChange(child, $event)"
+            class="permission-checkbox"
+          />
+          <label [for]="child.key" class="permission-label">
+            {{ child.name }}
+          </label>
         </div>
-
-        <ng-container *ngTemplateOutlet="nodeTemplate; context: { nodes: permissionTree, level: 0 }"></ng-container>
-
+      </div>
     </div>
-
-    <div class="loading" *ngIf="loading">
-        Loading permissions...
-    </div>
+  </div>
 </div>
-
-<!-- Tree Node Template -->
-<ng-template #nodeTemplate let-nodes="nodes" let-level="level">
-    <ng-container *ngFor="let node of nodes">
-        <!-- Group Node -->
-        <div *ngIf="node.isGroup" class="tree-node"
-            [ngClass]="['level-' + level, node.expanded ? 'expanded' : 'collapsed']">
-            <div class="node-content">
-                <div class="node-expander" (click)="toggleExpanded(node)">
-                    <i class="fas" [ngClass]="{'fa-caret-right': !node.expanded, 'fa-caret-down': node.expanded}"></i>
-                </div>
-                <div class="node-checkbox">
-                    <input type="checkbox" [checked]="node.checked" [indeterminate]="node.indeterminate"
-                        (change)="onCheckboxChange($event, node)">
-                </div>
-                <div class="node-label">
-                    {{node.name}}
-                </div>
-            </div>
-
-            <!-- Children -->
-            <div class="node-children" *ngIf="node.expanded && node.children && node.children.length">
-                <ng-container
-                    *ngTemplateOutlet="nodeTemplate; context: { nodes: node.children, level: level + 1 }"></ng-container>
-            </div>
-        </div>
-
-        <!-- Leaf Node -->
-        <div *ngIf="!node.isGroup" class="tree-node leaf" [ngClass]="['level-' + level]">
-            <div class="node-content">
-                <div class="node-expander"></div>
-                <div class="node-checkbox">
-                    <input type="checkbox" [checked]="node.checked" (change)="onCheckboxChange($event, node)">
-                </div>
-                <div class="node-label">
-                    {{node.name}}
-                </div>
-            </div>
-        </div>
-    </ng-container>
-</ng-template>

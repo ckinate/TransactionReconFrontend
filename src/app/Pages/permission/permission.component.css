@@ -1,146 +1,67 @@
-.role-permissions-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  border: 1px solid #e0e0e0;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #e0e0e0;
-  padding: 0 1rem;
-}
-
-.tabs {
-  display: flex;
-}
-
-.tab {
-  padding: 1rem;
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  font-weight: 500;
-}
-
-.tab.active {
-  border-bottom: 2px solid #4CAF50;
-  color: #4CAF50;
-}
-
-.refresh-btn {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
+.permission-tree {
+  border: 1px solid #ddd;
   border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.search-container {
-  padding: 1rem;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.search-container input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.permissions-tree {
-  flex: 1;
+  padding: 12px;
+  max-height: 400px;
   overflow-y: auto;
 }
 
-.tree-header {
-  display: flex;
-  padding: 0.5rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
+.permission-node {
+  margin-bottom: 8px;
+}
+
+.node-item.group {
   font-weight: bold;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
 }
 
-.column {
-  padding: 0.25rem;
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.header-checkbox {
-  width: 40px;
+.permission-checkbox {
+  margin: 0;
 }
 
-.header-text {
+.permission-label {
+  cursor: pointer;
+  margin: 0;
   flex: 1;
 }
 
-.tree-node {
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.tree-node.collapsed .node-children {
-  display: none;
-}
-
-.node-content {
+.expand-button {
+  background: none;
+  border: none;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 12px;
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-}
-
-.node-expander {
-  width: 20px;
-  text-align: center;
-  cursor: pointer;
+  justify-content: center;
   color: #666;
-  transition: transform 0.2s ease;
+  padding: 0;
 }
 
-.node-expander:hover {
+.expand-button:hover {
   color: #333;
 }
 
-.node-checkbox {
+.expand-spacer {
   width: 20px;
-  text-align: center;
-  margin-right: 0.5rem;
+  height: 20px;
 }
 
-.node-label {
-  flex: 1;
-  font-weight: 500;
+.children-container {
+  margin-left: 0;
+  margin-top: 8px;
 }
 
-.tree-node.leaf .node-label {
-  font-weight: normal;
-}
-
-.node-children {
-  margin-left: 20px;
-}
-
-/* Indentation levels */
-.level-1 .node-content {
-  padding-left: 2rem;
-}
-
-.level-2 .node-content {
-  padding-left: 3rem;
-}
-
-.level-3 .node-content {
-  padding-left: 4rem;
-}
-
-.loading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  font-style: italic;
-  color: #666;
+.child-node {
+  margin-bottom: 4px;
+  padding-left: 8px;
 }

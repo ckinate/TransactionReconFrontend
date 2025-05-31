@@ -1,4 +1,5 @@
-import { Component, Input, input, OnInit, SimpleChanges } from '@angular/core';
+// Fixed permission.component.ts - Debug version to identify the reset issue
+import { Component, Input, OnInit, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { RoleService } from '../../../shared/common/_services/role/role.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -13,234 +14,123 @@ import { PermissionNode } from '../../../shared/interfaces/PermissionNode';
 })
 export class PermissionComponent implements OnInit {
   constructor(private roleService: RoleService) { }
-  //permissionTree: PermissionNode[] = [];
 
-   private _permissionTree: PermissionNode[] = [];
+  private _permissionTree: PermissionNode[] = [];
   searchControl = new FormControl('');
-  @Input() roleId: string = '';
+  // @Input() roleId: string = '';
+  // @Output() permissionsLoaded = new EventEmitter<void>();
   loading = false;
+  private isInitialized = false;
+  private lastRoleId: string = '';
 
-   // Getter/setter to track when permissionTree is accessed or modified
-  get permissionTree(): PermissionNode[] {
-    return this._permissionTree;
-  }
-
-  set permissionTree(value: PermissionNode[]) {
-    console.log('🔄 permissionTree setter called with', value.length, 'nodes');
-    console.trace('📍 Stack trace for permissionTree assignment:');
-    this._permissionTree = value;
-  }
+  @Input() permissionNodes: PermissionNode[] = [];
+  @Input() selectedPermissions: string[] = [];
+  @Output() permissionsChange = new EventEmitter<string[]>();
 
   ngOnInit(): void {
-     console.log('🚀 ngOnInit() called');
-    this.loadPermissions();
+     this.initializeExpandedState();
+    this.updateCheckStates();
   }
-
-  // ngOnChanges(changes: SimpleChanges): void {
-   
-  //   if (changes['roleId'] && changes['roleId'].currentValue) {
-  //     this.loadPermissions();
-  //   }
-  // }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('🔄 ngOnChanges() called with changes:', changes);
-    if (changes['roleId']) {
-      console.log('🔑 roleId changed from', changes['roleId'].previousValue, 'to', changes['roleId'].currentValue);
-      if (changes['roleId'].currentValue) {
-        this.loadPermissions();
-      }
+   ngOnChanges(changes: SimpleChanges) {
+    if (changes['selectedPermissions'] || changes['permissionNodes']) {
+      this.updateCheckStates();
     }
   }
-
-  loadPermissions(): void {
-     console.log('🔄 loadPermissions() called - Start');
-    console.log('📋 Current roleId:', this.roleId);
-    console.log('📊 Current tree state before loading:', this.permissionTree.length, 'nodes');
-    this.loading = true;
-   // this.roleId = roleId;
-    console.log(`The role ID inside loadPermission is ${this.roleId}`);
-
-    // Get permission tree
-    this.roleService.getPermissionsTree().subscribe(tree => {
-         console.log('🌳 Received tree from service:', tree);
-      // Initialize the tree state first
-      this.permissionTree = this.initializeTreeState(tree);
-        console.log('✅ Tree initialized, nodes:', this.permissionTree.length);
-
-      // If we have a role ID, get its permissions and apply them
-      if (this.roleId) {
-        console.log(`The role ID is ${this.roleId}`);
-        this.roleService.getRole(this.roleId).subscribe(role => {
-           console.log('👤 Received role data:', role);
-          console.log('🔐 Role permissions:', role.permissions);
-          // Apply permissions to the already initialized tree
-          this.applyPermissionsToTree(this.permissionTree, role.permissions);
-
-             console.log('✅ Permissions applied to tree');
-          console.log('📊 Final tree state:', this.permissionTree);
-          
-          // Debug: Log the tree state after applying permissions
-          console.log('Permission tree after applying permissions:', this.permissionTree);
-          console.log('Selected permissions after loading:', this.selectedPermission());
-          
-          this.loading = false;
-            console.log('🔄 loadPermissions() completed with roleId');
-        });
-      } else {
-         console.log('ℹ️ No roleId provided, using empty permissions');
-        this.loading = false;
-         console.log('🔄 loadPermissions() completed without roleId');
+   private initializeExpandedState() {
+    this.permissionNodes.forEach(node => {
+      if (node.isGroup) {
+        node.expanded = true; // Default to expanded
       }
     });
   }
-
-  // Initialize tree state with collapsed groups - FIXED VERSION
-  initializeTreeState(nodes: PermissionNode[]): PermissionNode[] {
-    console.log('🏗️ initializeTreeState() called with', nodes.length, 'nodes');
-    
-    const result = nodes.map(node => {
-      const newNode = { ...node };
-      newNode.expanded = false; // Start collapsed
-      newNode.checked = false; // Initialize as unchecked
-      newNode.indeterminate = false; // Initialize indeterminate state
-      
-      if (newNode.children) {
-        newNode.children = this.initializeTreeState(newNode.children);
-      }
-      
-      return newNode;
-    });
-    
-    console.log('✅ Tree initialized with', result.length, 'root nodes');
-    return result;
-  }
-
-  // Toggle expanded state of group nodes
-  toggleExpanded(node: PermissionNode): void {
-    if (node.isGroup) {
-      node.expanded = !node.expanded;
-    }
-  }
-
-  // FIXED: Recursively apply selected permissions to tree
-  applyPermissionsToTree(nodes: PermissionNode[], selectedPermissions: string[]): void {
-    nodes.forEach(node => {
+   private updateCheckStates() {
+    this.permissionNodes.forEach(node => {
       if (node.isGroup && node.children) {
-        // First apply to children
-        this.applyPermissionsToTree(node.children, selectedPermissions);
-        
-        // Then set group state based on children
-        const allChecked = node.children.every(child => child.checked);
-        const someChecked = node.children.some(child => child.checked || child.indeterminate);
-        
-        node.checked = allChecked;
-        node.indeterminate = !allChecked && someChecked;
+        this.updateGroupCheckState(node);
       } else {
-        // Set checked state for leaf node
-        node.checked = selectedPermissions.includes(node.key);
+        node.checked = this.selectedPermissions.includes(node.key);
       }
     });
   }
+   private updateGroupCheckState(groupNode: PermissionNode) {
+    if (!groupNode.children) return;
 
-  // Update states of parent nodes
-  updateParentStates(nodes: PermissionNode[]): void {
-    nodes.forEach(node => {
-      if (node.isGroup && node.children && node.children.length > 0) {
-        const allChecked = node.children.every(child => child.checked);
-        const someChecked = node.children.some(child => child.checked || child.indeterminate);
-        
-        node.checked = allChecked;
-        node.indeterminate = !allChecked && someChecked;
-      }
+    // Update children first
+    groupNode.children.forEach(child => {
+      child.checked = this.selectedPermissions.includes(child.key);
     });
+
+    // Update group state based on children
+    const checkedChildren = groupNode.children.filter(child => child.checked).length;
+    const totalChildren = groupNode.children.length;
+
+    if (checkedChildren === 0) {
+      groupNode.checked = false;
+      groupNode.indeterminate = false;
+    } else if (checkedChildren === totalChildren) {
+      groupNode.checked = true;
+      groupNode.indeterminate = false;
+    } else {
+      groupNode.checked = false;
+      groupNode.indeterminate = true;
+    }
   }
 
-  // Handle node check/uncheck
-  toggleNode(node: PermissionNode, checked: boolean): void {
-    node.checked = checked;
-    node.indeterminate = false;
-    
-    // If it's a group, apply to all children
+  onNodeChange(node: PermissionNode, event: any) {
+    const isChecked = event.target.checked;
+
     if (node.isGroup && node.children) {
+      // Handle group selection - select/deselect all children
       node.children.forEach(child => {
-        this.toggleNode(child, checked);
+        child.checked = isChecked;
+        this.updateSelectedPermissions(child.key, isChecked);
       });
+      node.checked = isChecked;
+      node.indeterminate = false;
+    } else {
+      // Handle individual node selection
+      node.checked = isChecked;
+      this.updateSelectedPermissions(node.key, isChecked);
+
+      // Update parent group state if this is a child node
+      const parentGroup = this.findParentGroup(node);
+      if (parentGroup) {
+        this.updateGroupCheckState(parentGroup);
+      }
     }
-    
-    // Update parent states
-    this.updateParentStates(this.permissionTree);
-    
-    // Debug: Log current selections after toggle
-    console.log('Current selections after toggle:', this.selectedPermission());
+
+    this.emitPermissionsChange();
   }
 
-  // FIXED: Collect all selected permission keys
-  collectSelectedPermissions(nodes: PermissionNode[]): string[] {
-    let permissions: string[] = [];
-    
-    nodes.forEach(node => {
-      if (node.isGroup && node.children) {
-        // Recursively collect from children
-        permissions = [...permissions, ...this.collectSelectedPermissions(node.children)];
-      } else if (!node.isGroup && node.checked) {
-        // Only collect from leaf nodes that are checked
-        permissions.push(node.key);
+   private findParentGroup(childNode: PermissionNode): PermissionNode | null {
+    for (const node of this.permissionNodes) {
+      if (node.isGroup && node.children?.includes(childNode)) {
+        return node;
       }
-    });
-    
-    return permissions;
+    }
+    return null;
   }
 
-  // Filter tree based on search input
-  searchPermissions(): void {
-    const searchTerm = this.searchControl.value?.toLowerCase() || '';
-    // Implement search functionality here
-  }
-
-  // Refresh permissions
-  refreshPermissions(): void {
-    this.loadPermissions();
-  }
-
-  onCheckboxChange(event: Event, node: PermissionNode): void {
-    const input = event.target as HTMLInputElement;
-    this.toggleNode(node, input.checked);
-  }
-
-  selectedPermission(): string[] {
-
-     console.log('🎯 selectedPermission() called');
-    console.log('📊 Current tree length:', this.permissionTree.length);
-    console.log('🌳 Tree state summary:');
-
-     // Quick summary of tree state
-    this.permissionTree.forEach(node => {
-      if (node.isGroup && node.children) {
-        const checkedChildren = node.children.filter(child => child.checked).length;
-        console.log(`  📁 ${node.name}: ${checkedChildren}/${node.children.length} children checked`);
+  private updateSelectedPermissions(key: string, isSelected: boolean) {
+    if (isSelected && !this.selectedPermissions.includes(key)) {
+      this.selectedPermissions.push(key);
+    } else if (!isSelected) {
+      const index = this.selectedPermissions.indexOf(key);
+      if (index > -1) {
+        this.selectedPermissions.splice(index, 1);
       }
-    });
-      console.log(`The Permission Tree inside selected Permission is ${JSON.stringify(this.permissionTree)}`)
-    const selectedPermissions = this.collectSelectedPermissions(this.permissionTree);
-    console.log('✅ Final selected permissions:', selectedPermissions);
-    return selectedPermissions;
+    }
   }
 
-  // Save permissions
-  savePermissions(): void {
-    const selectedPermissions = this.collectSelectedPermissions(this.permissionTree);
-    console.log('Saving permissions:', selectedPermissions);
-    
-    // Uncomment when ready to save
-    // this.permissionService.saveRolePermissions({
-    //   roleId: this.roleId,
-    //   permissionKeys: selectedPermissions
-    // }).subscribe(() => {
-    //   alert('Permissions saved successfully');
-    // }, error => {
-    //   console.error('Error saving permissions', error);
-    //   alert('Error saving permissions');
-    // });
+    toggleExpand(node: PermissionNode) {
+    node.expanded = !node.expanded;
   }
+
+  private emitPermissionsChange() {
+    this.permissionsChange.emit([...this.selectedPermissions]);
+  }
+
+ 
+
+  
 }
