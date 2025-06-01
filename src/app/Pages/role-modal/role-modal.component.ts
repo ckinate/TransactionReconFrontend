@@ -70,7 +70,7 @@ export class RoleModalComponent implements OnInit, OnChanges {
       const formValue = this.roleForm.value;
       this.save.emit({
         name: formValue.name.trim(),
-        description: formValue.description?.trim(),
+        description: formValue.description,
         permissions: this.selectedPermissions
       });
     }

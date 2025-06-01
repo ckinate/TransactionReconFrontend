@@ -1,0 +1,39 @@
+
+.modal-header {
+      border-bottom: 1px solid #dee2e6;
+      padding: 1rem;
+    }
+    .modal-body {
+      padding: 1.5rem 1rem;
+    }
+    .modal-footer {
+      border-top: 1px solid #dee2e6;
+      padding: 1rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+    .modal-title {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .header-success {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+    }
+    .header-error {
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+      color: #721c24;
+    }
+    .header-warning {
+      background-color: #fff3cd;
+      border-color: #ffeaa7;
+      color: #856404;
+    }
+    .header-info {
+      background-color: #d1ecf1;
+      border-color: #bee5eb;
+      color: #0c5460;
+    }

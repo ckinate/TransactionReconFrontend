@@ -1,0 +1,24 @@
+
+
+
+ .modal-header {
+      border-bottom: 1px solid #dee2e6;
+      padding: 1rem;
+
+    }
+    .modal-body {
+      padding: 1.5rem 1rem;
+
+    }
+    .modal-footer {
+      border-top: 1px solid #dee2e6;
+      padding: 1rem;
+      display: flex;
+      justify-content: flex-end;
+      
+    }
+    .modal-title {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }

@@ -1,0 +1,29 @@
+
+  <div class="modal-header">
+      <h4 class="modal-title">
+        <i class="fas fa-exclamation-triangle text-warning me-2"></i>
+        {{ title }}
+      </h4>
+    </div>
+    <div class="modal-body">
+      <p class="mb-0" [innerHTML]="message"></p>
+    </div>
+    <div class="modal-footer">
+      <button 
+        type="button" 
+        class="btn me-2"
+        [ngClass]="cancelButtonClass"
+        (click)="onCancel()">
+        {{ cancelText }}
+      </button>
+      <button 
+        type="button" 
+        class="btn"
+        [ngClass]="confirmButtonClass"
+        (click)="onConfirm()">
+        {{ confirmText }}
+      </button>
+    </div>
+
+   
+  

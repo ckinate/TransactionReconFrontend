@@ -16,6 +16,7 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { PermissionComponent } from '../permission/permission.component';
 import { RoleModalComponent } from '../role-modal/role-modal.component';
 import { PermissionNode } from '../../../shared/interfaces/PermissionNode';
+import { ModalService } from '../../../shared/common/_services/modal/modal.service';
 
 @Component({
   selector: 'app-role',
@@ -33,7 +34,8 @@ export class RoleComponent implements OnInit, AfterViewInit {
 
   constructor(
     private roleService: RoleService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private modalService: ModalService
   ) { }
 
   paginatedRoleValues: GetPaginatedRole = {
@@ -157,12 +159,7 @@ export class RoleComponent implements OnInit, AfterViewInit {
 
  
 
-  closeEditModal() {
-    console.log('❌ Closing edit modal');
-    this.editModal.hide();
-    this.resetForm();
-  }
-
+  
   resetForm() {
     console.log('🔄 Resetting form');
     this.roleId = "";
@@ -207,25 +204,53 @@ export class RoleComponent implements OnInit, AfterViewInit {
     };
 
     console.log(`The role Permission is ${JSON.stringify(roleData.permissions)}`)
+     let roleDto = new RoleDto();
+        roleDto = {...request, id:"", rolePermissions: request.permissions}
 
-    // const operation = this.selectedRole 
-    //   ? this.roleService.updateRole({ ...request, id: this.selectedRole.id } as UpdateRoleRequest)
-    //   : this.roleService.createRole(request as CreateRoleRequest);
+  
+    const operation = this.selectedRole 
+      ? this.roleService.updateRole(this.selectedRole.id, roleDto)
+      : this.roleService.createRole(roleDto);
 
-    // operation.subscribe({
-    //   next: () => {
-    //     this.modalLoading = false;
-    //     this.closeModal();
-    //     this. getRoles();
+    operation.subscribe({
+      next: () => {
+        this.modalLoading = false;
+        this.closeModal();
+        this. getRoles();
        
-    //   },
-    //   error: (error) => {
-    //     console.error('Error saving role:', error);
-    //     this.modalLoading = false;
+      },
+      error: (error) => {
+        console.error('Error saving role:', error);
+        this.modalLoading = false;
       
-    //   }
-    // });
+      }
+     });
   }
+
+
+
+  delete(roleId: string){
+   
+    this.modalService.openConfirmationModal({
+     title: 'Delete Role',
+     message: 'Are you sure you want to delete this item?',
+     confirmText: 'Delete',
+    cancelText: 'Cancel',
+   }).subscribe(confirmed => {
+    if (confirmed) {
+
+       this.modalService.openSuccessModal(
+          `Role  has been deleted successfully.`,
+          'Role Deleted'
+        ).subscribe();
+    
+    }
+    });
+  }
+
+ 
+
+
 
  
 }

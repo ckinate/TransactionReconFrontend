@@ -11,27 +11,26 @@
                     <i aria-hidden="true" class="fa fa-times"></i>
                 </span>
             </div>
-            <form>
+            <form [formGroup]="roleForm" >
                 <div class="modal-body">
                     <tabset class="tab-container tabbable-line">
                         <tab heading="{{'Role Name'}}">
-                            <div class="row">
+                            <div class="row mt-2">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="small mb-1" for="roleName"> {{"Name"}} <span
                                                 style="color: red;">*</span></label>
                                         <input type="text" required class="form-control" id="RoleName"
-                                            placeholder="Enter Role Name" name="RoleName" [(ngModel)]="createRole.name">
+                                            placeholder="Enter Role Name" name="RoleName"  formControlName="name"
+                                            [class.error]="roleForm.get('name')?.invalid && roleForm.get('name')?.touched">
+                                            <div *ngIf="roleForm.get('name')?.invalid && roleForm.get('name')?.touched" class="error-message">Role name is required </div>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="small mb-1" for="roleDesc"> {{"Description"}} <span
-                                                style="color: red;">*</span></label>
-                                        <input type="text" required class="form-control" id="RoleDesc"
-                                            placeholder="Enter Role Desc" name="RoleDesc"
-                                            [(ngModel)]="createRole.description">
+                                        <label for="roleDescription">Description</label>
+                                           <textarea  id="roleDescription" formControlName="description" class="form-control" rows="3"  placeholder="Optional description for the role"  ></textarea>
                                     </div>
                                 </div>
 
@@ -54,8 +53,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary blue" (click)="onSubmit()"
-                      >
+                    <button type="submit" class="btn btn-primary blue" (click)="onSubmit()"  [disabled]="roleForm.invalid || loading">
                         <em class="fa fa-save"></em>
                         <span>{{ loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create') }}</span>
                     </button>

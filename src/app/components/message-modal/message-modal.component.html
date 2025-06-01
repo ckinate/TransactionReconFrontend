@@ -1,0 +1,18 @@
+  <div class="modal-header" [ngClass]="getHeaderClass()">
+      <h4 class="modal-title">
+        <i [ngClass]="getIconClass()" class="me-2"></i>
+        {{ title }}
+      </h4>
+    </div>
+    <div class="modal-body">
+      <p class="mb-0" [innerHTML]="message"></p>
+    </div>
+    <div class="modal-footer">
+      <button 
+        type="button" 
+        class="btn"
+        [ngClass]="buttonClass"
+        (click)="onClose()">
+        {{ buttonText }}
+      </button>
+    </div>

@@ -67,7 +67,7 @@
                                             </a>
                                         </li>
                                         <li *ngIf="'Roles.Delete' | permission">
-                                            <a href="javascript:;" class="dropdown-item">
+                                            <a href="javascript:;" class="dropdown-item" (click)="delete(role.id)">
                                                 {{"Delete"}}
                                             </a>
                                         </li>
