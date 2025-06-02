@@ -195,6 +195,16 @@ export class RoleComponent implements OnInit, AfterViewInit {
  
 
   saveRole(roleData: { name: string; description?: string; permissions: string[] }) {
+
+     this.modalService.openConfirmationModal({
+     title: 'Save Role',
+     message: 'Are you sure you want proceed?',
+     confirmText: 'Save',
+    cancelText: 'Cancel',
+   }).subscribe(confirmed => {
+     if (confirmed) {
+      
+       
     this.modalLoading = true;
 
     const request = {
@@ -204,8 +214,18 @@ export class RoleComponent implements OnInit, AfterViewInit {
     };
 
     console.log(`The role Permission is ${JSON.stringify(roleData.permissions)}`)
+    const { name, description } = request;
+
      let roleDto = new RoleDto();
-        roleDto = {...request, id:"", rolePermissions: request.permissions}
+      roleDto = {
+        ...roleDto,
+         name,
+         description,
+          id: "",
+         rolePermissions: request.permissions
+        };
+       
+    console.log(`The roleDto is ${JSON.stringify(roleDto)}`)
 
   
     const operation = this.selectedRole 
@@ -216,7 +236,11 @@ export class RoleComponent implements OnInit, AfterViewInit {
       next: () => {
         this.modalLoading = false;
         this.closeModal();
-        this. getRoles();
+        this.getRoles();
+          this.modalService.openSuccessModal(
+          `Role  has been saved successfully.`,
+          'Role Saved'
+        ).subscribe();
        
       },
       error: (error) => {
@@ -225,6 +249,13 @@ export class RoleComponent implements OnInit, AfterViewInit {
       
       }
      });
+
+     
+    
+    }
+    });
+
+
   }
 
 
