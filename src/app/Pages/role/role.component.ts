@@ -245,6 +245,10 @@ export class RoleComponent implements OnInit, AfterViewInit {
       },
       error: (error) => {
         console.error('Error saving role:', error);
+          this.modalService.openErrorModal(
+          `${error}`,
+          'Role Error'
+        ).subscribe();
         this.modalLoading = false;
       
       }

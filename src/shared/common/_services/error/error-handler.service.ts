@@ -41,6 +41,10 @@ export class ErrorHandlerService {
           }
           
           break;
+           case 403:
+            errorMessage = 'Unauthorized.Access denied . No permission granted';
+          
+          break;
         case 404:
            if (error?.message) {
              errorMessage = `Error: ${error?.message}`;
