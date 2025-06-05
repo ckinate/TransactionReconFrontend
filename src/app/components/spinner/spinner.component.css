@@ -1,0 +1,47 @@
+
+.spinner-overlay {
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 9999;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .position-fixed {
+      position: fixed !important;
+    }
+
+    .position-absolute {
+      position: absolute !important;
+    }
+
+    .bg-white {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    .bg-dark {
+      background-color: rgba(33, 37, 41, 0.95) !important;
+    }
+
+    /* Custom spinner sizes */
+    .spinner-border-xl, .spinner-grow-xl {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .spinner-border-sm, .spinner-grow-sm {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
+    /* Animation enhancements */
+    .spinner-border, .spinner-grow {
+      animation-duration: 0.8s;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .spinner-overlay {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+    }

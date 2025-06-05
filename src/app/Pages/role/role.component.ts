@@ -17,11 +17,14 @@ import { PermissionComponent } from '../permission/permission.component';
 import { RoleModalComponent } from '../role-modal/role-modal.component';
 import { PermissionNode } from '../../../shared/interfaces/PermissionNode';
 import { ModalService } from '../../../shared/common/_services/modal/modal.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EnhancedSpinnerService } from '../../../shared/common/_services/spinner/enhanced-spinner.service';
+import { SpinnerModalComponent } from '../../components/spinner-modal/spinner-modal.component';
 
 @Component({
   selector: 'app-role',
-  imports: [CommonModule, RouterModule, FormsModule, PermissionPipe, PermissionAnyPipe, ModalModule, BusyIfDirective, BsDropdownModule,
-    TabsModule, RoleModalComponent
+  imports: [CommonModule, RouterModule, FormsModule, PermissionPipe, PermissionAnyPipe, ModalModule, BsDropdownModule,
+    TabsModule, RoleModalComponent, SpinnerModalComponent
   ],
   templateUrl: './role.component.html',
   styleUrl: './role.component.css'
@@ -35,7 +38,8 @@ export class RoleComponent implements OnInit, AfterViewInit {
   constructor(
     private roleService: RoleService,
     private cdr: ChangeDetectorRef,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private spinnerService: EnhancedSpinnerService
   ) { }
 
   paginatedRoleValues: GetPaginatedRole = {
@@ -74,6 +78,7 @@ export class RoleComponent implements OnInit, AfterViewInit {
   }
 
   getRoles() {
+    this.spinnerService.show('Loading roles...');
     this.isLoadingRoles = true;
     let input: GetPaginatedRoleInput = {
       filter: this.filterValue,
@@ -88,9 +93,11 @@ export class RoleComponent implements OnInit, AfterViewInit {
           this.paginatedRoleValues = response;
           response.items.map(x => x.id)
           this.isLoadingRoles = false;
+           this.spinnerService.hide();
         },
         error: (err: any) => {
           this.isLoadingRoles = false;
+           this.spinnerService.hide();
           console.log(`The errors is ${err}`);
         }
       }

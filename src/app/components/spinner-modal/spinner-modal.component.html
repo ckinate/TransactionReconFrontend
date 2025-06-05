@@ -1,0 +1,15 @@
+<!-- Actual Spinner -->
+<div *ngIf="(spinnerService.spinner$ | async)?.show" class="spinner-overlay">
+
+    <div class="spinner-content">
+        <!-- Bootstrap Spinner -->
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <!-- Message -->
+        <div class="mt-3 text-center">
+            <p class="mb-0 fw-medium">{{ (spinnerService.spinner$ | async)?.message }}</p>
+        </div>
+    </div>
+</div>

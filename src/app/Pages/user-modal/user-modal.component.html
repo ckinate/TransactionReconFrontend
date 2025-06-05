@@ -1,0 +1,131 @@
+<div bsModal #createModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="createOrEditModal"
+    aria-hidden="true" [config]="{ backdrop: 'static' }">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <h4 class="modal-title m-0">
+                    <span>{{ isEditMode ? 'Edit User' : 'Create User' }}</span>
+                </h4>
+                <span class="close" (click)=" Close()" [attr.aria-label]="'Close'" style="cursor: pointer;">
+                    <i aria-hidden="true" class="fa fa-times"></i>
+                </span>
+            </div>
+            <form [formGroup]="userForm">
+                <div class="modal-body">
+
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="small mb-1" for="firstName"> {{" First Name"}} <span
+                                        style="color: red;">*</span></label>
+                                <input type="text" required class="form-control" id="firstName"
+                                    placeholder="Enter First Name" name="firstName" formControlName="firstName"
+                                    [class.error]="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched">
+                                <div *ngIf="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched"
+                                    class="error-message">first name is required </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="small mb-1" for="lastName"> {{" Last Name"}} <span
+                                        style="color: red;">*</span></label>
+                                <input type="text" required class="form-control" id="lastName"
+                                    placeholder="Enter Last Name" name="lastName" formControlName="lastName"
+                                    [class.error]="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched">
+                                <div *ngIf="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched"
+                                    class="error-message">Last name is required </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="small mb-1" for="userName"> {{" User Name"}} <span
+                                        style="color: red;">*</span></label>
+                                <input type="text" required class="form-control" id="userName"
+                                    placeholder="Enter User Name" name="userName" formControlName="userName"
+                                    [class.error]="userForm.get('userName')?.invalid && userForm.get('userName')?.touched">
+                                <div *ngIf="userForm.get('userName')?.invalid && userForm.get('userName')?.touched"
+                                    class="error-message">user name is required </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="small mb-1" for="email"> {{"Email"}} <span
+                                        style="color: red;">*</span></label>
+                                <input type="text" required class="form-control" id="email" placeholder="Enter Email"
+                                    name="userName" formControlName="email"
+                                    [class.error]="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+                                <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+                                    class="error-message">Email is required </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group position-relative">
+                                <label for="password">Password <span style="color: red;">*</span></label>
+                                <input id="password" class="form-control" [type]="showPassword ? 'text' : 'password'"
+                                    formControlName="password" /> <i
+                                    [ngClass]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                    class="password-toggle-icon" (click)="togglePasswordVisibility()"></i>
+                            </div>
+                            <div *ngIf="userForm.get('password')?.invalid && userForm.get('password')?.touched"
+                                class="error-message">Password is required </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group position-relative">
+                                <label for="confirmPassword">Confirm Password <span style="color: red;">*</span></label>
+                                <input id="confirmPassword" class="form-control"
+                                    [type]="showConfirmPassword ? 'text' : 'password'"
+                                    formControlName="confirmPassword" />
+
+                                <i [ngClass]="showConfirmPassword? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                    class="password-toggle-icon" (click)="toggleConfirmPasswordVisibility()"></i>
+
+
+                            </div>
+
+                            <div *ngIf="userForm.get('confirmPassword')?.errors" class="invalid-feedback">
+                                <div *ngIf="userForm.get('confirmPassword')?.errors?.['required']">
+                                    Confirm Password is required
+                                </div>
+                                <div *ngIf="userForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords
+                                    must match
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="role">{{"Select Role"}}</label>
+                                <ng-select [items]="roleList" bindLabel="name" [bindValue]="'name'"
+                                    placeholder="Select role" formControlName="role">
+                                </ng-select>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary blue" (click)="onSubmit()"
+                        [disabled]="userForm.invalid || loading">
+                        <em class="fa fa-save"></em>
+                        <span>{{ loading ? 'Saving...' : (isEditMode ? 'Update' : 'Create') }}</span>
+                    </button>
+
+                    <span class="btn btn-light-danger font-weight-bold" (click)="Close()" [attr.aria-label]="'Close'"
+                        style="cursor: pointer;">
+                        {{ "Close" }}
+                    </span>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
