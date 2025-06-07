@@ -1,10 +1,11 @@
 export interface GetUserDto {
     id: string
     email: string
+    userName: string
     firstName: string
     lastName: string
     isActive: boolean
     lastLoginAt: string
-    roles: string[]
+    role: string
     permissions: any[]
   }

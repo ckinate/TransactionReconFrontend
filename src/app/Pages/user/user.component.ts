@@ -17,10 +17,12 @@ import { SpinnerService } from '../../../shared/common/_services/spinner/spinner
 import { EnhancedSpinnerService } from '../../../shared/common/_services/spinner/enhanced-spinner.service';
 import { SpinnerModalComponent } from '../../components/spinner-modal/spinner-modal.component';
 import { UserModalComponent } from '../user-modal/user-modal.component';
+import { GetUserDto } from '../../../shared/interfaces/GetUserDto';
+import { CreateUser } from '../../../shared/interfaces/CreateUser';
 
 @Component({
   selector: 'app-user',
-  imports: [CommonModule, RouterModule, FormsModule, PermissionPipe, PermissionAnyPipe, ModalModule, BsDropdownModule,TabsModule, SpinnerModalComponent],
+  imports: [CommonModule, RouterModule, FormsModule, PermissionPipe, PermissionAnyPipe, ModalModule, BsDropdownModule,TabsModule, SpinnerModalComponent,UserModalComponent],
   templateUrl: './user.component.html',
   styleUrl: './user.component.css'
 })
@@ -45,6 +47,9 @@ export class UserComponent implements OnInit {
   usersList: UserItem[] = []
   filterValue: string = "";
   loadingUsers: boolean = false;
+  showModal: boolean = false;
+   selectedUser: GetUserDto | null = null;
+    modalLoading = false;
 
   ngOnInit(): void {
    this.getUsers()
@@ -84,11 +89,6 @@ export class UserComponent implements OnInit {
     }
   }
 
-  openCreateModal() {
-    // this.selectedRole = null;
-   // this.showModal = true;
-     this.userModalComponent.showModal();
-  }
 
    refresh() {
     this.getUsers();
@@ -110,8 +110,31 @@ export class UserComponent implements OnInit {
     this.getUsers();
   }
 
+  editUser(user:UserItem){
+    this.modalLoading = true;
+
+  }
+
   delete(userId: string) {
     
+  }
+
+    openCreateModal() {
+    this.selectedUser = null;
+    this.showModal = true;
+     this.userModalComponent.showModal();
+  }
+
+
+  closeModal() {
+  this.showModal = false;
+    this.selectedUser = null;
+    this.userModalComponent.Close();
+    
+  }
+
+  saveUser(userData:CreateUser){
+
   }
 
 }

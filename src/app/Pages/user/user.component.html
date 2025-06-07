@@ -129,3 +129,5 @@
 
 </div>
 <app-spinner-modal></app-spinner-modal>
+
+<user-modal #userModalComponent [visible]="showModal" [user]="selectedUser" [loading]="modalLoading" (close)="closeModal()" (save)="saveUser($event)"></user-modal>

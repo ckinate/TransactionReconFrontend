@@ -17,8 +17,8 @@
 
     .password-toggle-icon {
   position: absolute;
-  top: 50%;
-  right: 15px;
+  top: 70%;
+  right: 5px;
   transform: translateY(-50%);
   cursor: pointer;
   color: #6c757d;

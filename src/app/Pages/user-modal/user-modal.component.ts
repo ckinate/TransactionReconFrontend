@@ -8,9 +8,10 @@ import { UserItem } from '../../../shared/interfaces/GetPaginatedUser';
 import { CreateUser } from '../../../shared/interfaces/CreateUser';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RoleDto } from '../../../shared/interfaces/RoleDto';
+import { GetUserDto } from '../../../shared/interfaces/GetUserDto';
 
 @Component({
-  selector: 'app-user-modal',
+  selector: 'user-modal',
   imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule,ModalModule,TabsModule, NgSelectModule],
   templateUrl: './user-modal.component.html',
   styleUrl: './user-modal.component.css'
@@ -38,7 +39,7 @@ export class UserModalComponent implements OnInit, OnChanges {
   @ViewChild('createModal', { static: true }) createModal!: ModalDirective;
 
   @Input() visible = false; 
-  @Input() user: UserItem | null = null;
+  @Input() user: GetUserDto | null = null;
   @Input() loading = false;
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<CreateUser>();
