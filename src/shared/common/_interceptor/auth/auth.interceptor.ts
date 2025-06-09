@@ -6,8 +6,10 @@ import { AuthService } from '../../_services/auth/auth.service';
 // State management for token refresh
 let isRefreshing = false;
 const refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
-export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next:HttpHandlerFn): Observable<HttpEvent<any>> => {
-   const authService = inject(AuthService);
+
+export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
+  const authService = inject(AuthService);
+  
   // Skip authentication for login/register/refresh endpoints
   if (isAuthUrl(req.url)) {
     return next(req);
@@ -30,10 +32,17 @@ export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next:H
 };
 
 function isAuthUrl(url: string): boolean {
-  return url.includes('/auth/login') || 
+  // Check for Auth API endpoints
+  return url.includes('/api/Auth/login') || 
+         url.includes('/api/Auth/register') || 
+         url.includes('/api/Auth/refresh-token')||
+         url.includes('/api/Auth/verify-email')  ||
+         // Keep the old patterns as fallback
+         url.includes('/auth/login') || 
          url.includes('/auth/register') || 
          url.includes('/auth/refresh-token');
 }
+
 function getToken(): string {
   return localStorage.getItem('token') || sessionStorage.getItem('token') || '';
 }

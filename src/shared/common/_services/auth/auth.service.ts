@@ -32,14 +32,19 @@ export class AuthService {
   get isLoggedIn(): boolean {
     return !!this.currentUserSubject.value;
   }
-    login(loginData: LoginRequest): Observable<AuthResponse> {
+
+   login(loginData: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, loginData)
-      .pipe(
-        tap(response => this.handleAuthentication(response, loginData.rememberMe)),
-       // catchError(this.handleError),
-        catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
-      );
-  }
+    .pipe(
+      tap(response => {
+        // Only handle authentication if login was successful
+        if (response.success && response.token) {
+          this.handleAuthentication(response, loginData.rememberMe);
+        }
+      }),
+      catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
+}
   register(registerData: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, registerData)
       .pipe(
@@ -47,6 +52,13 @@ export class AuthService {
         catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
        // catchError(this.handleError)
       );
+  }
+
+  verifyEmail(userId: string, token: string): Observable<any> {
+    // This calls your .NET backend API
+    return this.http.get(`${this.apiUrl}/verify-email?userId=${userId}&token=${token}`).pipe(
+       catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
   }
     logout() {
     // Clear local storage
@@ -112,32 +124,29 @@ export class AuthService {
     return user?.roles?.includes(role) || false;
   }
 
-    private handleAuthentication(response: AuthResponse, rememberMe: boolean) {
-    if (!response.success || !response.token) {
-      return;
-    }
-    
-    const user: User = {
-      id: response.userId,
-      email: response.email,
-      firstName: response.firstName, // These would come from the API
-      lastName: response.lastName,  // or from the decoded token
-      roles: response.roles,
-      permissions: response.permissions
-    };
-    
-    this.currentUserSubject.next(user);
-    
-    // Store tokens and user data based on rememberMe preference
-    const storage = rememberMe ? localStorage : sessionStorage;
-    storage.setItem('token', response.token);
-    storage.setItem('refreshToken', response.refreshToken);
-    storage.setItem('userData', JSON.stringify(user));
-    
-    // Set auto-logout timer
-    const expirationDuration = new Date(response.expireAt).getTime() - new Date().getTime();
-    this.autoLogout(expirationDuration);
-  }
+  private handleAuthentication(response: AuthResponse, rememberMe: boolean) {
+  // Remove the success check since we're only calling this for successful logins
+  const user: User = {
+    id: response.userId,
+    email: response.email,
+    firstName: response.firstName,
+    lastName: response.lastName,
+    roles: response.roles,
+    permissions: response.permissions
+  };
+  
+  this.currentUserSubject.next(user);
+  
+  // Store tokens and user data based on rememberMe preference
+  const storage = rememberMe ? localStorage : sessionStorage;
+  storage.setItem('token', response.token);
+  storage.setItem('refreshToken', response.refreshToken);
+  storage.setItem('userData', JSON.stringify(user));
+  
+  // Set auto-logout timer
+  const expirationDuration = new Date(response.expireAt).getTime() - new Date().getTime();
+  this.autoLogout(expirationDuration);
+}
 
     private checkForStoredAuth() {
     // Check localStorage first, then sessionStorage
@@ -167,19 +176,25 @@ export class AuthService {
     this.autoLogout(expirationDuration);
   }
 
-    private autoLogout(expirationDuration: number) {
-    this.tokenExpirationTimer = setTimeout(() => {
-      // Check if we can refresh the token
-      const refreshToken = this.getRefreshToken();
-      if (refreshToken) {
-        this.refreshToken().subscribe({
-          error: () => this.logout()
-        });
-      } else {
-        this.logout();
-      }
-    }, expirationDuration);
+  private autoLogout(expirationDuration: number) {
+  // Clear any existing timer
+  if (this.tokenExpirationTimer) {
+    clearTimeout(this.tokenExpirationTimer);
   }
+  
+  this.tokenExpirationTimer = setTimeout(() => {
+    // Check if we can refresh the token
+    const refreshToken = this.getRefreshToken();
+    if (refreshToken) {
+      this.refreshToken().subscribe({
+        error: () => this.logout()
+      });
+    } else {
+      this.logout();
+    }
+  }, expirationDuration);
+}
+
 
   private getToken(): string {
     return localStorage.getItem('token') || sessionStorage.getItem('token') || '';
