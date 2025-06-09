@@ -42,7 +42,7 @@ export class ErrorHandlerService {
         case 401:
           // Check server response message first (this is the key fix)
           if (error?.error?.message) {
-          return  errorMessage = error.error.message;Me
+          return  errorMessage = error.error.message;
           }
           else if (error?.message) {
             errorMessage = `Error: ${error.message}`;
