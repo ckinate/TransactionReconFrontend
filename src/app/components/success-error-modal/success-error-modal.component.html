@@ -1,0 +1,25 @@
+<div class="modal-header border-0 pb-0">
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body text-center py-4">
+    <div class="mb-3">
+        <div class="icon-circle" [ngClass]="getIconClass()">
+            <i [class]="getIconName()" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <h4 class="modal-title mb-3" [ngClass]="getTitleClass()">
+        {{ config?.title }}
+    </h4>
+
+    <p class="modal-message text-muted mb-4">
+        {{ config?.message }}
+    </p>
+
+    <button type="button" class="btn btn-confirm px-4 py-2" [ngClass]="getButtonClass()" (click)="close()">
+        {{ config?.confirmButtonText }}
+    </button>
+</div>

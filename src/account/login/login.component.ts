@@ -5,6 +5,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../shared/common/_services/auth/auth.service';
 import { LoginRequest } from '../../shared/interfaces/LoginRequest';
 import { finalize } from 'rxjs';
+import { MessageModalService } from '../../shared/common/_services/modal/message-modal.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit  {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+     private authService: AuthService,
+    private messageModalService: MessageModalService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -74,6 +76,10 @@ export class LoginComponent implements OnInit  {
         },
         error: error => {
           this.errorMessage = error.message;
+           this.messageModalService.showError(
+            'Unable to process your request.',
+             'Error'
+           );
         }
       });
   }

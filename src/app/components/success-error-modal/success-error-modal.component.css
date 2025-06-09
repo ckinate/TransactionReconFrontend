@@ -1,0 +1,80 @@
+
+  .btn-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #6c757d;
+      cursor: pointer;
+      padding: 0.5rem;
+      line-height: 1;
+    }
+
+    .btn-close:hover {
+      color: #000;
+    }
+
+    .icon-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+
+    .icon-circle.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .icon-circle.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .icon-circle i {
+      font-size: 2.5rem;
+    }
+
+    .modal-title.success {
+      color: #155724;
+    }
+
+    .modal-title.error {
+      color: #721c24;
+    }
+
+    .modal-message {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .btn-confirm {
+      min-width: 100px;
+      border-radius: 6px;
+      font-weight: 500;
+      border: none;
+    }
+
+    .btn-confirm.success {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .btn-confirm.success:hover {
+      background-color: #218838;
+    }
+
+    .btn-confirm.error {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .btn-confirm.error:hover {
+      background-color: #c82333;
+    }
+
+    .modal-body {
+      padding: 2rem;
+    }
