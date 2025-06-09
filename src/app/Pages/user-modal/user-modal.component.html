@@ -14,45 +14,45 @@
                 <div class="modal-body">
 
                     <div class="row mt-2">
-                        <div class="col-md-4">
+                        <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label class="small mb-1" for="firstName"> {{" First Name"}} <span
                                         style="color: red;">*</span></label>
-                                <input type="text" required class="form-control" id="firstName"
-                                    placeholder="Enter First Name" name="firstName" formControlName="firstName"
+                                <input type="text" class="form-control" id="firstName" placeholder="Enter First Name"
+                                    name="firstName" formControlName="firstName"
                                     [class.error]="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched">
                                 <div *ngIf="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched"
                                     class="error-message">first name is required </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label class="small mb-1" for="lastName"> {{" Last Name"}} <span
                                         style="color: red;">*</span></label>
-                                <input type="text" required class="form-control" id="lastName"
-                                    placeholder="Enter Last Name" name="lastName" formControlName="lastName"
+                                <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name"
+                                    name="lastName" formControlName="lastName"
                                     [class.error]="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched">
                                 <div *ngIf="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched"
                                     class="error-message">Last name is required </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label class="small mb-1" for="userName"> {{" User Name"}} <span
                                         style="color: red;">*</span></label>
-                                <input type="text" required class="form-control" id="userName"
-                                    placeholder="Enter User Name" name="userName" formControlName="userName"
-                                    [class.error]="userForm.get('userName')?.invalid && userForm.get('userName')?.touched">
+                                <input type="text" class="form-control" id="userName" placeholder="Enter User Name"
+                                    name="userName" formControlName="userName">
                                 <div *ngIf="userForm.get('userName')?.invalid && userForm.get('userName')?.touched"
                                     class="error-message">user name is required </div>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+
+                        <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label class="small mb-1" for="email"> {{"Email"}} <span
                                         style="color: red;">*</span></label>
-                                <input type="text" required class="form-control" id="email" placeholder="Enter Email"
+                                <input type="text" class="form-control" id="email" placeholder="Enter Email"
                                     name="userName" formControlName="email"
                                     [class.error]="userForm.get('email')?.invalid && userForm.get('email')?.touched">
                                 <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched"
@@ -60,7 +60,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6 mt-2">
                             <div class="form-group position-relative">
                                 <label for="password">Password <span style="color: red;">*</span></label>
                                 <input id="password" class="form-control" [type]="showPassword ? 'text' : 'password'"
@@ -72,7 +72,7 @@
                                 class="error-message">Password is required </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6 mt-2">
                             <div class="form-group position-relative">
                                 <label for="confirmPassword">Confirm Password <span style="color: red;">*</span></label>
                                 <input id="confirmPassword" class="form-control"
@@ -95,7 +95,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6 mt-2">
                             <div class="form-group">
                                 <label for="role">{{"Select Role"}}</label>
                                 <ng-select [items]="roleList" bindLabel="name" [bindValue]="'name'"

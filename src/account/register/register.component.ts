@@ -17,6 +17,8 @@ export class RegisterComponent {
   loading = false;
   submitted = false;
   errorMessage = '';
+   showPassword = false;
+  showConfirmPassword = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -88,6 +90,14 @@ export class RegisterComponent {
           this.errorMessage = error.message;
         }
       });
+  }
+
+    togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
 }

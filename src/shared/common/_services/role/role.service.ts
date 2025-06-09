@@ -39,6 +39,13 @@ export class RoleService {
         catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
       );
   }
+  getRoles(): Observable<GetRoleDto[]> {
+    const url = `${this.apiUrl}/role`;
+    return this.http.get<GetRoleDto[]>(url).pipe(
+       catchError((error: HttpErrorResponse) => this.errorHandler.handleError(error))
+    );
+    
+  }
    createRole(role: RoleDto): Observable<any> {
        return this.http.post<any>(`${this.apiUrl}`, role,{ observe: 'response' })
             .pipe(

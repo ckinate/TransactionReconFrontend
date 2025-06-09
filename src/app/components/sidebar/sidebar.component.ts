@@ -26,8 +26,11 @@ export class SidebarComponent implements OnInit {
       icon: 'fa-cog',
       route: '/setup',
       isCollapsed: true,
-      permission: 'Pages.Setup',
-      subItems: []
+      permission: '',
+      subItems: [
+        { name: 'Bank', icon: 'fa-box', route: '/payments', isCollapsed: true },
+        { name: 'Bank Account', icon: 'fa-money-bill', route: '/payments', isCollapsed: true }
+      ]
     },
     {
       name: 'Administration',
@@ -40,8 +43,8 @@ export class SidebarComponent implements OnInit {
         { name: 'Roles', icon: 'fa-file-invoice', route: '/roles', isCollapsed: true,permission: 'Roles.View' },
         { name: 'Payments', icon: 'fa-money-bill', route: '/payments', isCollapsed: true },
         { name: 'Verify Online Payments', icon: 'fa-check-circle', route: '/verify-online-payments', isCollapsed: true },
-        { name: 'Customer Edit Request', icon: 'fa-edit', route: '/customer-edit-request', isCollapsed: true },
-        { name: 'Products', icon: 'fa-box', route: '/products', isCollapsed: true }
+        { name: 'Customer Edit Request', icon: 'fa-edit', route: '/customer-edit-request', isCollapsed: true }
+      
       ]
     },
     {

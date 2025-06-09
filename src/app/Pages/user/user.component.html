@@ -68,7 +68,7 @@
                                     </span>
                                     <ul class="dropdown-menu dropdown-menu-end" *dropdownMenu style="width: 50px;">
                                         <li *ngIf="'Users.Create' | permission">
-                                            <a href="javascript:;" class="dropdown-item">
+                                            <a href="javascript:;" class="dropdown-item" (click)="editUser(user)">
                                                 {{"Edit"}}
                                             </a>
                                         </li>
@@ -128,6 +128,9 @@
     </div>
 
 </div>
-<app-spinner-modal></app-spinner-modal>
 
-<user-modal #userModalComponent [visible]="showModal" [user]="selectedUser" [loading]="modalLoading" (close)="closeModal()" (save)="saveUser($event)"></user-modal>
+
+<user-modal #userModalComponent [visible]="showModal" [user]="selectedUser" [loading]="modalLoading"
+    (close)="closeModal()" (save)="saveUser($event)"></user-modal>
+
+<app-spinner-modal></app-spinner-modal>

@@ -36,6 +36,8 @@ export class LoginComponent implements OnInit  {
   submitted = false;
   errorMessage = '';
   returnUrl: string = '/';
+   showPassword = false;
+  showConfirmPassword = false;
 
    ngOnInit(): void {
        // Get return url from route parameters or default to '/'
@@ -74,6 +76,14 @@ export class LoginComponent implements OnInit  {
           this.errorMessage = error.message;
         }
       });
+  }
+
+    togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
 }

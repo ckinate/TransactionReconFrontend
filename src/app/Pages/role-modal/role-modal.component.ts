@@ -28,7 +28,9 @@ export class RoleModalComponent implements OnInit, OnChanges {
   @Input() loading = false;
   @Output() close = new EventEmitter<void>();
   @Output() save = new EventEmitter<{ name: string; description?: string; permissions: string[] }>();
-   @ViewChild('createModal', { static: true }) createModal!: ModalDirective;
+  @ViewChild('createModal', { static: true }) createModal!: ModalDirective;
+  
+   
 
   roleForm!: FormGroup;
   selectedPermissions: string[] = [];

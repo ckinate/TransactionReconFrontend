@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ModalDirective, ModalModule } from 'ngx-bootstrap/modal';
@@ -9,6 +9,9 @@ import { CreateUser } from '../../../shared/interfaces/CreateUser';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RoleDto } from '../../../shared/interfaces/RoleDto';
 import { GetUserDto } from '../../../shared/interfaces/GetUserDto';
+import { RoleService } from '../../../shared/common/_services/role/role.service';
+import { GetRoleDto } from '../../../shared/interfaces/GetRoleDto';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'user-modal',
@@ -19,14 +22,14 @@ import { GetUserDto } from '../../../shared/interfaces/GetUserDto';
   
 export class UserModalComponent implements OnInit, OnChanges {
   
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,  private roleService: RoleService) {
     this.userForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
-      userName:['', [Validators.required, Validators.minLength(2)]],
+      userName:[''],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]],
+      password: [''],
+      confirmPassword: [''],
       role: ['']
     },
        {
@@ -34,6 +37,7 @@ export class UserModalComponent implements OnInit, OnChanges {
     }
     );
   }
+   private destroyRef = inject(DestroyRef);
  
 
   @ViewChild('createModal', { static: true }) createModal!: ModalDirective;
@@ -49,10 +53,11 @@ export class UserModalComponent implements OnInit, OnChanges {
   createUser: CreateUser = new CreateUser();
   showPassword = false;
   showConfirmPassword = false;
-  roleList: RoleDto[]=[]
+  roleList: GetRoleDto[]=[]
   
 
-    ngOnInit(): void {
+  ngOnInit(): void {
+    this.getRoles();
      this.setupForm();
   }
     ngOnChanges(changes: SimpleChanges): void {
@@ -81,7 +86,8 @@ export class UserModalComponent implements OnInit, OnChanges {
   };
   
    private setupForm() {
-    this.isEditMode = !!this.user;
+     this.isEditMode = !!this.user;
+     this.setPasswordValidators();
     
     if (this.user) {
       this.userForm.patchValue({
@@ -99,14 +105,31 @@ export class UserModalComponent implements OnInit, OnChanges {
       
     }
   }
+  setPasswordValidators() {
+  const password = this.userForm.get('password');
+  const confirmPassword = this.userForm.get('confirmPassword');
+
+  if (!this.isEditMode) {
+    password?.setValidators([Validators.required, Validators.minLength(6)]);
+    confirmPassword?.setValidators([Validators.required]);
+  } else {
+    password?.clearValidators();
+    confirmPassword?.clearValidators();
+  }
+
+  password?.updateValueAndValidity();
+  confirmPassword?.updateValueAndValidity();
+}
 
    onSubmit() {
-    
+   
     if (this.userForm.valid) {
       const formValue = this.userForm.value;
       let createUser: CreateUser = new CreateUser()
+    
       createUser = { ...formValue };
       this.save.emit(createUser);
+     
     }
   }
 
@@ -123,6 +146,16 @@ export class UserModalComponent implements OnInit, OnChanges {
 
   toggleConfirmPasswordVisibility() {
     this.showConfirmPassword = !this.showConfirmPassword;
+  }
+  getRoles() {
+    this.roleService.getRoles().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.roleList = res;
+      },
+      error: (err: any) => {
+        
+      }
+    })
   }
 
 }

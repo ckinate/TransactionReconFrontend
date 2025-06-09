@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { PermissionPipe } from '../../../shared/common/_pipes/permission.pipe';
@@ -12,13 +12,14 @@ import { ModalService } from '../../../shared/common/_services/modal/modal.servi
 import { UserService } from '../../../shared/common/_services/user/user.service';
 import { GetPaginatedUser, UserItem } from '../../../shared/interfaces/GetPaginatedUser';
 import { GetPaginatedUserInput } from '../../../shared/interfaces/GetPaginatedUserInput';
-import { SpinnerComponent } from '../../components/spinner/spinner.component';
-import { SpinnerService } from '../../../shared/common/_services/spinner/spinner.service';
+
 import { EnhancedSpinnerService } from '../../../shared/common/_services/spinner/enhanced-spinner.service';
 import { SpinnerModalComponent } from '../../components/spinner-modal/spinner-modal.component';
 import { UserModalComponent } from '../user-modal/user-modal.component';
 import { GetUserDto } from '../../../shared/interfaces/GetUserDto';
 import { CreateUser } from '../../../shared/interfaces/CreateUser';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UserUpdateDto } from '../../../shared/interfaces/UserUpdateDto';
 
 @Component({
   selector: 'app-user',
@@ -33,7 +34,9 @@ export class UserComponent implements OnInit {
       private spinnerService: EnhancedSpinnerService
   ) { }
 
-   @ViewChild('userModalComponent') userModalComponent!:UserModalComponent;
+  @ViewChild('userModalComponent') userModalComponent!: UserModalComponent;
+  
+   private destroyRef = inject(DestroyRef);
   
    paginatedUserValues: GetPaginatedUser = {
       hasNextPage: false,
@@ -48,7 +51,7 @@ export class UserComponent implements OnInit {
   filterValue: string = "";
   loadingUsers: boolean = false;
   showModal: boolean = false;
-   selectedUser: GetUserDto | null = null;
+  selectedUser: GetUserDto | null = null;
     modalLoading = false;
 
   ngOnInit(): void {
@@ -112,6 +115,18 @@ export class UserComponent implements OnInit {
 
   editUser(user:UserItem){
     this.modalLoading = true;
+    this.userService.getUser(user.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.selectedUser = res;
+        console.log(`The selected user Id is ${JSON.stringify(this.selectedUser)}`)
+          this.showModal = true;
+        this.userModalComponent.showModal();
+        this.modalLoading = false
+      },
+      error: (error) => {
+         this.modalLoading = false
+      }
+    })
 
   }
 
@@ -128,12 +143,53 @@ export class UserComponent implements OnInit {
 
   closeModal() {
   this.showModal = false;
-    this.selectedUser = null;
+    this.selectedUser =null;
     this.userModalComponent.Close();
     
   }
 
-  saveUser(userData:CreateUser){
+  saveUser(userData: CreateUser) {
+    this.modalLoading = false;
+    console.log(`The user to be created is ${JSON.stringify(userData)}`)
+     this.modalService.openConfirmationModal({
+     title: 'Save Role',
+     message: 'Are you sure you want proceed?',
+     confirmText: 'Save',
+    cancelText: 'Cancel',
+     }).subscribe(confirmed => {
+       if (confirmed) {
+         this.modalLoading = true;
+        
+         let userUpdateDto = new UserUpdateDto();
+         userUpdateDto.firstName = userData.firstName;
+         userUpdateDto.isActive = this.selectedUser ? this.selectedUser.isActive: false;
+         userUpdateDto.lastName = userData.lastName;
+         userUpdateDto.role = userData.role;
+         
+         const operation = this.selectedUser ? this.userService.updateUser(this.selectedUser.id, userUpdateDto)
+           : this.userService.createUser(userData);
+         
+         operation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+           next: () => {
+              this.modalLoading = false;
+              this.closeModal();
+              this.getUsers();
+            this.modalService.openSuccessModal(
+             `User  has been saved successfully.`,
+             'User Saved'
+             ).subscribe();
+           },
+           error: (error) => {
+                 this.modalService.openErrorModal(
+               `${error}`,
+               'User Error'
+              ).subscribe();
+              this.modalLoading = false;
+           }
+         })
+     }
+   })
+
 
   }
 

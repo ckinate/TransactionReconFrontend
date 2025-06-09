@@ -1,6 +1,6 @@
 // Debug role.component.ts - Enhanced with better debugging
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, inject, DestroyRef } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { RoleService } from '../../../shared/common/_services/role/role.service';
 import { GetPaginatedRole, RoleItem } from '../../../shared/interfaces/GetPaginatedRole';
@@ -33,7 +33,9 @@ export class RoleComponent implements OnInit, AfterViewInit {
   @ViewChild('createModal', { static: true }) createModal!: ModalDirective;
   @ViewChild('permissionComponent') permissionComponent!: PermissionComponent;
   @ViewChild('editModal', { static: true }) editModal!: ModalDirective;
-    @ViewChild('roleModalComponent') roleModalComponent!: RoleModalComponent;
+  @ViewChild('roleModalComponent') roleModalComponent!: RoleModalComponent;
+  
+  private destroyRef = inject(DestroyRef);
 
   constructor(
     private roleService: RoleService,
@@ -85,7 +87,7 @@ export class RoleComponent implements OnInit, AfterViewInit {
       pageIndex: this.paginatedRoleValues.pageIndex,
       pageSize: this.paginatedRoleValues.pageSize
     }
-    this.roleService.paginatedRoles(input).subscribe(
+    this.roleService.paginatedRoles(input).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
       {
         next: (response) => {
           this.rolesList = response.items;
@@ -104,7 +106,7 @@ export class RoleComponent implements OnInit, AfterViewInit {
     )
   }
    loadPermissions() {
-    this.roleService.getPermissionsTree().subscribe({
+    this.roleService.getPermissionsTree().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (permissions) => {
         this.permissionNodes = permissions;
       },
@@ -125,7 +127,7 @@ export class RoleComponent implements OnInit, AfterViewInit {
 
     
     // Load the full role data with permissions
-    this.roleService.getRole(role.id).subscribe({
+    this.roleService.getRole(role.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (fullRole) => {
          this.selectedRole = {
            id: '',
@@ -239,7 +241,7 @@ export class RoleComponent implements OnInit, AfterViewInit {
       ? this.roleService.updateRole(this.selectedRole.id, roleDto)
       : this.roleService.createRole(roleDto);
 
-    operation.subscribe({
+    operation.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.modalLoading = false;
         this.closeModal();

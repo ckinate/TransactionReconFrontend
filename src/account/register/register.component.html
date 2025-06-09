@@ -62,9 +62,17 @@
                             </div>
                             <!-- Password input -->
                             <div class="form-outline mb-4">
-                                <label for="password">Password</label>
-                                <input type="password" id="password" formControlName="password" class="form-control"
-                                    [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+                                <div class="form-group position-relative">
+                                    <label for="password">Password</label>
+                                    <input [type]="showPassword ? 'text' : 'password'" id="password"
+                                        formControlName="password" class="form-control"
+                                        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+
+                                    <i [ngClass]="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                        class="password-toggle-icon" (click)="togglePasswordVisibility()"></i>
+
+                                </div>
+
                                 <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
                                     <div *ngIf="f['password'].errors['required']">Password is required</div>
                                     <div *ngIf="f['password'].errors['minlength']">Password must be at least 6
@@ -75,10 +83,17 @@
                             </div>
                             <!-- Confirm Password -->
                             <div class="form-outline mb-4">
-                                <label for="confirmPassword">Confirm Password</label>
-                                <input type="password" id="confirmPassword" formControlName="confirmPassword"
-                                    class="form-control"
-                                    [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }" />
+                                <div class="form-group position-relative">
+                                    <label for="confirmPassword">Confirm Password</label>
+                                    <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword"
+                                        formControlName="confirmPassword" class="form-control"
+                                        [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }" />
+
+                                    <i [ngClass]="showConfirmPassword? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                        class="password-toggle-icon" (click)="toggleConfirmPasswordVisibility()"></i>
+
+                                </div>
+
                                 <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
                                     <div *ngIf="f['confirmPassword'].errors['required']">Confirm Password is required
                                     </div>

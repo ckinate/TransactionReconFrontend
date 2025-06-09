@@ -28,3 +28,22 @@ border-bottom-right-radius: .3rem;
 height: 100vh !important;
 }
 }
+
+
+ .password-toggle-icon {
+  position: absolute;
+  top: 70%;
+  right: 5px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6c757d;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
